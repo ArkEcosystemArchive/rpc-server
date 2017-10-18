@@ -1,0 +1,38 @@
+{
+  "name": "ark-rpc",
+  "version": "1.0.0",
+  "description": "RPC server acting as lite client for ARK blockchain",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha --timeout 10000",
+    "start": "nodemon ./server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arkecosystem/ark-rpc.git"
+  },
+  "keywords": [
+    "ark",
+    "blockchain",
+    "rpc"
+  ],
+  "author": "fx thoorens",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arkecosystem/ark-rpc/issues"
+  },
+  "homepage": "https://github.com/arkecosystem/ark-rpc#readme",
+  "dependencies": {
+    "arkjs": "^0.2.1",
+    "async": "^2.5.0",
+    "lowdb": "^1.0.0",
+    "request": "^2.83.0",
+    "restify": "^6.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1",
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1",
+    "mocha": "^2.4.5"
+  }
+}
