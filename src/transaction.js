@@ -3,48 +3,57 @@ var network = require('./network');
 var low = require('lowdb');
 var FileSync = require('lowdb/adapters/FileSync');
 
-var adapter = new FileSync('storage.lowdb')
+var adapter = new FileSync('storage.lowdb');
 var db = low(adapter);
-db.defaults({ transactions: [] })
-  .write()
+db.defaults({transactions: []}).
+  write();
 
 function get(req, res, next) {
-  network.getFromNode('/api/transactions/get?id=' + req.params.id, function (err, response, body) {
-    body = JSON.parse(body);
-    res.send(body);
-    next();
+  network.getFromNode(`/api/transactions/get?id=${req.params.id}`, function (err, response, body) {
+    if(err) next();
+    else {
+      body = JSON.parse(body);
+      res.send(body);
+      next();
+    }
   });
 }
 
 function create(req, res, next) {
-  const tx = arkjs.transaction.createTransaction(req.params.recipientId, req.params.amount, null, req.params.passphrase);
-  db.get('transactions')
-    .push(tx)
-    .write()
+  var tx = arkjs.transaction.createTransaction(req.params.recipientId, req.params.amount, null, req.params.passphrase);
+  db.get('transactions').
+    push(tx).
+    write();
   res.send(tx);
+  next();
 }
 
 function getAll(req, res, next) {
-  var tx = db.get('transactions');
+  // Avar tx = db.get('transactions');
+  next();
 }
 
 function broadcast(req, res, next) {
-  var tx = db.get('transactions')
-    .find({ id: req.params.id })
-    .value() || req.params;
+  var tx = db.get('transactions').
+    find({id: req.params.id}).
+    value() || req.params;
   if (!arkjs.crypto.verify(tx)) {
-    res.send({ success: false, error: "transaction does not verify", transaction: tx });
-    return next();
+    res.send({
+      success: false,
+      error: "transaction does not verify",
+      transaction: tx
+    });
+    next();
   }
   network.broadcast(tx, function () {
-    res.send({ success: true });
+    res.send({success: true});
     next();
   });
 }
 
 module.exports = {
-  create: create,
-  get: get,
-  broadcast: broadcast,
-  getAll: getAll
+  create,
+  get,
+  broadcast,
+  getAll
 };

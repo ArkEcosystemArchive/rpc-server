@@ -1,9 +1,9 @@
 
-//Require the dev-dependencies
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../server');
-let should = chai.should();
+// Require the dev-dependencies
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../server');
+const should = chai.should();
 
 chai.use(chaiHttp);
 
@@ -11,9 +11,9 @@ describe('Accounts', () => {
 
   describe('/GET account', () => {
     it('it should GET account with a given address on mainnet', (done) => {
-        chai.request(server)
-            .get('/mainnet/account/AUDud8tvyVZa67p3QY7XPRUTjRGnWQQ9Xv')
-            .end((err, res) => {
+        chai.request(server).
+            get('/mainnet/account/AUDud8tvyVZa67p3QY7XPRUTjRGnWQQ9Xv').
+            end((err, res) => {
                 res.should.have.status(200);
                 res.body.success.should.be.equal(true);
                 res.body.account.address.should.be.equal("AUDud8tvyVZa67p3QY7XPRUTjRGnWQQ9Xv");
@@ -22,9 +22,9 @@ describe('Accounts', () => {
       });
 
     it('it should GET account with a given address on devnet', (done) => {
-        chai.request(server)
-            .get('/devnet/account/DGihocTkwDygiFvmg6aG8jThYTic47GzU9')
-            .end((err, res) => {
+        chai.request(server).
+            get('/devnet/account/DGihocTkwDygiFvmg6aG8jThYTic47GzU9').
+            end((err, res) => {
                 res.should.have.status(200);
                 res.body.success.should.be.equal(true);
                 res.body.account.address.should.be.equal("DGihocTkwDygiFvmg6aG8jThYTic47GzU9");
@@ -35,10 +35,10 @@ describe('Accounts', () => {
 
   describe('/POST account', () => {
     it('it should create an account on mainnet', (done) => {
-      chai.request(server)
-        .post('/mainnet/account')
-        .send({passphrase:"this is a test"})
-        .end((err, res) => {
+      chai.request(server).
+        post('/mainnet/account').
+        send({passphrase: "this is a test"}).
+        end((err, res) => {
             res.should.have.status(200);
             res.body.success.should.be.equal(true);
             res.body.account.address.should.be.equal("AUdAwTiByRp5BFyGz9uxXuNYa1KGHT4rmt");
@@ -48,10 +48,10 @@ describe('Accounts', () => {
     });
 
     it('it should create an account on devnet', (done) => {
-        chai.request(server)
-            .post('/devnet/account')
-            .send({passphrase:"this is a test"})
-            .end((err, res) => {
+        chai.request(server).
+            post('/devnet/account').
+            send({passphrase: "this is a test"}).
+            end((err, res) => {
                 res.should.have.status(200);
                 res.body.success.should.be.equal(true);
                 res.body.account.address.should.be.equal("DHzPqDoCwh4CuHwtA6FBvnH3yY7sJmZ54P");

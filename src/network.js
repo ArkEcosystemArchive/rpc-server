@@ -1,12 +1,9 @@
 var request = require('request');
 var async = require('async');
 var arkjs = require('arkjs');
-var low = require('lowdb');
-var FileSync = require('lowdb/adapters/FileSync');
-var adapter = new FileSync('storage.lowdb');
-var db = low(adapter);
 
-var server, network;
+var network = null,
+server = null;
 
 var networks = {
   devnet: {
@@ -43,81 +40,16 @@ var networks = {
   }
 };
 
-function findEnabledPeers(cb) {
-  var peers = [];
-  getFromNode('/peer/list', function (err, response, body) {
-    if (err) {
-      return cb(peers);
-    }
-    else {
-      var respeers = JSON.parse(body).peers
-        .filter(function (peer) {
-          return peer.status == "OK";
-        })
-        .map(function (peer) {
-          return peer.ip + ":" + peer.port;
-        });
-      async.each(respeers, function (peer, cb) {
-        getFromNode('http://' + peer + '/api/blocks/getHeight', function (err, response, body) {
-          if (body != "Forbidden") {
-            peers.push(peer);
-          }
-          cb();
-        });
-      }, function (err) {
-        return cb(peers);
-      });
-    }
-  });
-}
-
-function postTransaction(transaction, cb) {
-  request(
-    {
-      url: 'http://' + server + '/peer/transactions',
-      headers: {
-        nethash: network.nethash,
-        version: '1.0.0',
-        port: 1
-      },
-      method: 'POST',
-      json: true,
-      body: { transactions: [transaction] }
-    },
-    cb
-  );
-}
-
-function broadcast(transaction, callback) {
-  network.peers.slice(0, 10).forEach(function (peer) {
-    //console.log("sending to", peer);
-    request(
-      {
-        url: 'http://' + peer + '/peer/transactions',
-        headers: {
-          nethash: network.nethash,
-          version: '1.0.0',
-          port: 1
-        },
-        method: 'POST',
-        json: true,
-        body: { transactions: [transaction] }
-      }
-    );
-  });
-  callback();
-}
-
 function getFromNode(url, cb) {
-  nethash = network ? network.nethash : "";
+  var nethash = network ? network.nethash : "";
   if (!url.startsWith("http")) {
-    url = 'http://' + server + url;
+    url = `http://${server}${url}`;
   }
   request(
     {
-      url: url,
+      url,
       headers: {
-        nethash: nethash,
+        nethash,
         version: '1.0.0',
         port: 1
       },
@@ -127,22 +59,87 @@ function getFromNode(url, cb) {
   );
 }
 
+function findEnabledPeers(cb) {
+  var peers = [];
+  getFromNode('/peer/list', function (err, response, body) {
+    if (err || body == "undefined") {
+      cb(peers);
+    }
+    var respeers = JSON.parse(body).peers.
+      filter(function (peer) {
+        return peer.status == "OK";
+      }).
+      map(function (peer) {
+        return `${peer.ip}:${peer.port}`;
+      });
+    async.each(respeers, function (peer, eachcb) {
+      getFromNode(`http://${peer}/api/blocks/getHeight`, function (error, res, body2) {
+        if (!error && body2 != "Forbidden") {
+          peers.push(peer);
+        }
+        eachcb();
+      });
+    }, function (error) {
+      if(error) return cb(error);
+
+      return cb(peers);
+    });
+
+  });
+}
+
+function postTransaction(transaction, cb) {
+  request(
+    {
+      url: `http://${server}/peer/transactions`,
+      headers: {
+        nethash: network.nethash,
+        version: '1.0.0',
+        port: 1
+      },
+      method: 'POST',
+      json: true,
+      body: {transactions: [transaction]}
+    },
+    cb
+  );
+}
+
+function broadcast(transaction, callback) {
+  network.peers.slice(0, 10).forEach(function (peer) {
+    // Console.log("sending to", peer);
+    request({
+        url: `http://${peer}/peer/transactions`,
+        headers: {
+          nethash: network.nethash,
+          version: '1.0.0',
+          port: 1
+        },
+        method: 'POST',
+        json: true,
+        body: {transactions: [transaction]}
+      });
+  });
+  callback();
+}
 
 
-function connect2network(n, callback) {
-  network = n;
-  server = n.peers[Math.floor(Math.random() * 1000) % n.peers.length];
+function connect2network(netw, callback) {
+  network = netw;
+  server = netw.peers[Math.floor(Math.random() * 1000) % netw.peers.length];
   findEnabledPeers(function (peers) {
     if (peers.length > 0) {
-      server = peers[0];
-      n.peers = peers;
+      [server] = peers;
+      netw.peers = peers;
     }
   });
-  getFromNode('/api/loader/autoconfigure', function (err, response, body) {
-    if (!body || !body.startsWith("{")) connect2network(n, callback);
+  getFromNode('/api/loader/autoconfigure', function(err, response, body) {
+    if(err) callback();
+    else if (!body || !body.startsWith("{"))
+        connect2network(netw, callback);
     else {
-      n.config = JSON.parse(body).network;
-      callback();
+        netw.config = JSON.parse(body).network;
+        callback();
     }
   });
 }
@@ -151,17 +148,15 @@ function connect(req, res, next) {
   if (!server || !network || network.name != req.params.network) {
     arkjs.crypto.setNetworkVersion(networks[req.params.network].version);
     connect2network(networks[req.params.network], next);
-  }
-  else {
+  } else {
     next();
   }
 }
 
 
-
 module.exports = {
-  connect: connect,
-  getFromNode: getFromNode,
-  broadcast: broadcast,
-  postTransaction: postTransaction
-}
+  broadcast,
+  connect,
+  getFromNode,
+  postTransaction
+};

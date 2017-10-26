@@ -4,10 +4,16 @@ var account = require('./src/account');
 var transaction = require('./src/transaction');
 var network = require('./src/network');
 
+function restrictToLocalhost(req, res, next){
+  if(req.connection.remoteAddress == "::1" || req.connection.remoteAddress == "127.0.0.1" || req.connection.remoteAddress == "::ffff:127.0.0.1")
+    next();
+  else res.end();
+}
 
 var server = restify.createServer();
 server.use(restify.plugins.bodyParser({mapParams: true}));
 server.use(network.connect);
+server.use(restrictToLocalhost);
 
 
 server.get('/:network/account/:address', account.get);
