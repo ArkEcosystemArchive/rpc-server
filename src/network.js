@@ -132,14 +132,14 @@ function connect2network(netw, callback) {
       [server] = peers;
       netw.peers = peers;
     }
+    callback();
   });
   getFromNode('/api/loader/autoconfigure', function(err, response, body) {
-    if(err) callback();
-    else if (!body || !body.startsWith("{"))
+    if(err) return;
+    if (!body || !body.startsWith("{"))
         connect2network(netw, callback);
     else {
-        netw.config = JSON.parse(body).network;
-        callback();
+        netw.config = JSON.parse(body).network;   
     }
   });
 }

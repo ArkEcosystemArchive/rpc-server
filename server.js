@@ -11,9 +11,9 @@ function restrictToLocalhost(req, res, next){
 }
 
 var server = restify.createServer();
+server.use(restrictToLocalhost);
 server.use(restify.plugins.bodyParser({mapParams: true}));
 server.use(network.connect);
-server.use(restrictToLocalhost);
 
 
 server.get('/:network/account/:address', account.get);
