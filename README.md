@@ -1,4 +1,5 @@
-# ark-rpc
+![ARK-RPC](https://cdn-images-1.medium.com/max/2000/1*QFNTgOOP_9NIaNwIrBnp_w.png)
+
 RPC server to connect to blockchain ARK
 
 # security warning
