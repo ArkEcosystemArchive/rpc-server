@@ -139,7 +139,7 @@ function connect2network(netw, callback) {
     if (!body || !body.startsWith("{"))
         connect2network(netw, callback);
     else {
-        netw.config = JSON.parse(body).network;   
+        netw.config = JSON.parse(body).network;
     }
   });
 }
