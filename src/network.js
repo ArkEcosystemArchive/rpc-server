@@ -146,8 +146,17 @@ function connect2network(netw, callback) {
 
 function connect(req, res, next) {
   if (!server || !network || network.name != req.params.network) {
-    arkjs.crypto.setNetworkVersion(networks[req.params.network].version);
-    connect2network(networks[req.params.network], next);
+    if(networks[req.params.network]){
+      arkjs.crypto.setNetworkVersion(networks[req.params.network].version);
+      connect2network(networks[req.params.network], next);
+    }
+    else{
+      res.send({
+        success: false,
+        error: `Could not find network ${req.params.network}`
+      });
+      res.end();
+    }
   } else {
     next();
   }

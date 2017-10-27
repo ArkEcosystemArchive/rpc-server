@@ -3,7 +3,7 @@ var network = require('./network');
 var low = require('lowdb');
 var FileSync = require('lowdb/adapters/FileSync');
 
-var adapter = new FileSync('storage.lowdb');
+var adapter = new FileSync(`${__dirname}/../storage.lowdb`);
 var db = low(adapter);
 db.defaults({transactions: []}).
   write();
