@@ -4,6 +4,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
 const arkjs = require('arkjs');
+const should = chai.should();
 
 chai.use(chaiHttp);
 
@@ -41,14 +42,17 @@ describe('Transactions', () => {
     it('it should create tx on mainnet and tx should verify', (done) => {
       chai.request(server).
         post('/mainnet/transaction').
-        send({amount: 100000000,
-recipientId: "AUDud8tvyVZa67p3QY7XPRUTjRGnWQQ9Xv",
-passphrase: "This is a test"}).
+        send({
+          amount: 100000000,
+          recipientId: "AUDud8tvyVZa67p3QY7XPRUTjRGnWQQ9Xv",
+          passphrase: "This is a test"
+        }).
         end((err, res) => {
           res.should.have.status(200);
-          res.body.recipientId.should.equal("AUDud8tvyVZa67p3QY7XPRUTjRGnWQQ9Xv");
-          mainnettx = res.body;
-          arkjs.crypto.verify(res.body).should.be.equal(true);
+          res.body.success.should.be.equal(true);
+          res.body.transaction.recipientId.should.equal("AUDud8tvyVZa67p3QY7XPRUTjRGnWQQ9Xv");
+          mainnettx = res.body.transaction;
+          arkjs.crypto.verify(mainnettx).should.be.equal(true);
           done();
         });
     });
@@ -75,9 +79,10 @@ passphrase: "This is a test"}).
         }).
         end((err, res) => {
           res.should.have.status(200);
-          res.body.recipientId.should.equal("DGihocTkwDygiFvmg6aG8jThYTic47GzU9");
-          devnettx = res.body;
-          arkjs.crypto.verify(res.body).should.be.equal(true);
+          res.body.success.should.be.equal(true);
+          res.body.transaction.recipientId.should.equal("DGihocTkwDygiFvmg6aG8jThYTic47GzU9");
+          devnettx = res.body.transaction;
+          arkjs.crypto.verify(devnettx).should.be.equal(true);
           done();
         });
     });
