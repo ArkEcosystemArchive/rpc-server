@@ -45,7 +45,8 @@ function getFromNode(url, cb) {
   if (!url.startsWith("http")) {
     url = `http://${server}${url}`;
   }
-  request({
+  request(
+    {
       url,
       headers: {
         nethash,
@@ -88,7 +89,8 @@ function findEnabledPeers(cb) {
 }
 
 function postTransaction(transaction, cb) {
-  request({
+  request(
+    {
       url: `http://${server}/peer/transactions`,
       headers: {
         nethash: network.nethash,

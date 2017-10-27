@@ -66,7 +66,6 @@ function broadcast(req, res, next) {
       });
       next();
     });
-  
 }
 
 module.exports = {

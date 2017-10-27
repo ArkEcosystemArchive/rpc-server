@@ -17,6 +17,8 @@ Supported networks are `mainnet` and `devnet` all calls should start with the ne
 ## Accounts
 - Get account balance from `address`: `GET /:network/account/:address`
 - Create account from `passphrase`: `POST /:network/account` params: `passphrase`
+- Create (or get if already existing) account and encrypt using bip38: `POST /:network/account/bip38` params: `bip38` (password for encrypted WIF), `userid` (to identify a user)
+- Get backup from `userid`: `GET /:network/account/bip38/:userid`  
 
 ## Transactions
 - Get last 50 transactions from `address`: `GET /:network/transactions/:address`

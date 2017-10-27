@@ -4,7 +4,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
 const arkjs = require('arkjs');
-const should = chai.should();
+chai.should();
 
 chai.use(chaiHttp);
 

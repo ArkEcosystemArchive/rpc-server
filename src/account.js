@@ -1,7 +1,7 @@
 var arkjs = require('arkjs');
 var bip39 = require('bip39');
 var bip38 = require('bip38');
-var BigInteger = require('bigi')
+var BigInteger = require('bigi');
 var network = require('./network');
 var leveldb = require('./leveldb');
 
@@ -46,21 +46,63 @@ function getBip38Account(req, res, next){
     });
 }
 
-function getBip38Keys(userid, bip38password, callback){
-  leveldb.
+function getBip38Keys(userid, bip38password){
+  return leveldb.
     getUTF8(arkjs.crypto.sha256(Buffer.from(userid)).toString('hex')).
     then(function(wif){
       if(wif){
         var decrypted = bip38.decrypt(wif.toString('hex'), bip38password);
         var keys = new arkjs.ECPair(BigInteger.fromBuffer(decrypted.privateKey), null);
-        callback(null, keys);
-      } else {
-        callback("WIF not found");
+
+        return Promise.resolve({
+          keys,
+          wif
+        });
       }
-    }).
-    catch(function (err) {
-      callback(err);
+
+      return Promise.reject(new Error("Could not founf WIF"));
     });
+}
+
+function createBip38(req, res, next) {
+  var keys = null;
+  if(req.params.bip38 && req.params.userid){
+    getBip38Keys(req.params.userid, req.params.bip38).
+      catch(function(){
+        keys = arkjs.crypto.getKeys(bip39.generateMnemonic());
+        var encryptedWif = bip38.encrypt(keys.d.toBuffer(32), true, req.params.bip38);
+        leveldb.setUTF8(arkjs.crypto.sha256(Buffer.from(req.params.userid)).toString("hex"), encryptedWif);
+
+        return Promise.resolve({
+          keys,
+          wif: encryptedWif
+        });
+      }).
+      then(function(account){
+        res.send({
+          success: true,
+          publicKey: account.keys.publicKey,
+          address: account.keys.getAddress(),
+          wif: account.wif
+        });
+        next();
+      }).
+      catch(function (err) {
+        if(err){
+          res.send({
+            success: false,
+            err
+          });
+        }
+        next();
+      });
+  } else {
+    res.send({
+      success: false,
+      err: "Wrong parameters"
+    });
+    next();
+  }
 }
 
 function create(req, res, next) {
@@ -75,30 +117,12 @@ function create(req, res, next) {
       }
     });
     next();
-  } else if(req.params.bip38){
-    account = arkjs.crypto.getKeys(bip39.generateMnemonic());
-    var encryptedWif = bip38.encrypt(account.d.toBuffer(32), true, req.params.bip38);
-    leveldb.
-      setUTF8(arkjs.crypto.sha256(Buffer.from(req.params.userid)).toString("hex"), encryptedWif).
-      then(function(){
-        res.send({
-          success: true,
-          account: {
-            backup: {wif: encryptedWif},
-            address: arkjs.crypto.getAddress(account.publicKey)
-          }
-        });
-        next();
-      }).
-      catch(function (err) {
-        if(err){
-          res.send({
-            success: false,
-            err
-          });
-        }
-        next();
-      });
+  } else {
+    res.send({
+      success: false,
+      err: "Wrong parameters"
+    });
+    next();
   }
 }
 
@@ -107,5 +131,6 @@ module.exports = {
   getBip38Account,
   getBip38Keys,
   getTransactions,
-  create
+  create,
+  createBip38
 };

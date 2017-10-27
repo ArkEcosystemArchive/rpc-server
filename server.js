@@ -22,6 +22,7 @@ function startServer(port){
 
     server.get('/:network/account/bip38/:userid', account.getBip38Account);
     server.get('/:network/account/:address', account.get);
+    server.post('/:network/account/bip38', account.createBip38);
     server.post('/:network/account', account.create);
     server.get('/:network/transactions/:address', account.getTransactions);
     server.post('/:network/transaction', transaction.create);
