@@ -38,7 +38,7 @@ describe('Transactions', () => {
   });
 
   describe('/POST transaction', () => {
-    let mainnettx;
+    let mainnettx = null;
     it('it should create tx on mainnet and tx should verify', (done) => {
       chai.request(server).
         post('/mainnet/transaction').
@@ -68,7 +68,7 @@ describe('Transactions', () => {
         });
     });
 
-    let devnettx;
+    let devnettx = null;
     it('it should create tx on devnet and tx should verify', (done) => {
       chai.request(server).
         post('/devnet/transaction').

@@ -1,9 +1,11 @@
 module.exports = {
+    "plugins": ["jasmine"],
     "env": {
-        es6: true,
-        "node": true
+        "es6": true,
+        "node": true,
+        "jasmine": true
     },
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "plugin:jasmine/recommended"],
     "rules": {
         "accessor-pairs": "error",
         "array-bracket-newline": "error",
@@ -58,7 +60,7 @@ module.exports = {
         "getter-return": "error",
         "global-require": "error",
         "guard-for-in": "error",
-        "handle-callback-err": "error",
+        "handle-callback-err": "off",
         "id-blacklist": "error",
         "id-length": "error",
         "id-match": "error",
@@ -201,7 +203,7 @@ module.exports = {
         "prefer-destructuring": "error",
         "prefer-numeric-literals": "error",
         "prefer-promise-reject-errors": "error",
-        "prefer-reflect": "error",
+        "prefer-reflect": "off",
         "prefer-rest-params": "error",
         "prefer-spread": "error",
         "prefer-template": "error",

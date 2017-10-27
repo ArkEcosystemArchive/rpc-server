@@ -55,7 +55,7 @@ function getFromNode(url, cb) {
       },
       timeout: 2000
     },
-    function(error, response, body){ // Failed, try to find another peer
+    function(error, response, body){
       if(error){
         server = network.peers[Math.floor(Math.random() * 1000) % network.peers.length];
       }

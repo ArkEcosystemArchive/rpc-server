@@ -18,11 +18,14 @@ Supported networks are `mainnet` and `devnet` all calls should start with the ne
 - Get account balance from `address`: `GET /:network/account/:address`
 - Create account from `passphrase`: `POST /:network/account` params: `passphrase`
 - Create (or get if already existing) account and encrypt using bip38: `POST /:network/account/bip38` params: `bip38` (password for encrypted WIF), `userid` (to identify a user)
-- Get backup from `userid`: `GET /:network/account/bip38/:userid`  
+- Get backup from `userid`: `GET /:network/account/bip38/:userid`
+
+If you want to create several accounts for one user, you need to use a different userid.
 
 ## Transactions
 - Get last 50 transactions from `address`: `GET /:network/transactions/:address`
 - Create a transaction: `POST /:network/transaction` params: `recipientId`, `amount` in satoshis, `passphrase`
+- Create a transaction using `bip38` for `userid`: `POST /:network/transaction/bip38` params: `recipientId`, `amount` in satoshis, `bip38` (password to encode wif), `userid`
 - Broadcast transaction: `POST /:network/broadcast` params: `id` of the transaction
 
 Note that if the transaction has been created via the RPC it has been stored internally, as such only the transaction `id` is needed to broadcast/rebroadcast it. Otherwise if created outside of this RPC server, pass the whole transaction body as the POST payload.
