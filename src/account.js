@@ -51,7 +51,7 @@ function getBip38Keys(userid, bip38password){
     getUTF8(arkjs.crypto.sha256(Buffer.from(userid)).toString('hex')).
     then(function(wif){
       if(wif){
-        var decrypted = bip38.decrypt(wif.toString('hex'), bip38password);
+        var decrypted = bip38.decrypt(wif.toString('hex'), bip38password + userid);
         var keys = new arkjs.ECPair(BigInteger.fromBuffer(decrypted.privateKey), null);
 
         return Promise.resolve({
