@@ -50,12 +50,17 @@ function getFromNode(url, cb) {
       url,
       headers: {
         nethash,
-        version: '1.0.0',
+        version: '2.0.0',
         port: 1
       },
       timeout: 2000
     },
-    cb
+    function(error, response, body){ // Failed, try to find another peer
+      if(error){
+        server = network.peers[Math.floor(Math.random() * 1000) % network.peers.length];
+      }
+      cb(error, response, body);
+    }
   );
 }
 
