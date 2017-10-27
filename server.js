@@ -15,23 +15,21 @@ function restrictToLocalhost(req, res, next){
 }
 
 function startServer(port){
-  server = restify.createServer();
-  server.use(restrictToLocalhost);
-  server.use(restify.plugins.bodyParser({mapParams: true}));
-  server.use(network.connect);
+  server = restify.createServer().
+    use(restrictToLocalhost).
+    use(restify.plugins.bodyParser({mapParams: true})).
+    use(network.connect);
 
-  server.get('/:network/account/:address', account.get);
-  server.post('/:network/account', account.create);
-  server.get('/:network/transactions/:address', account.getTransactions);
+    server.get('/:network/account/bip38/:userid', account.getBip38Account);
+    server.get('/:network/account/:address', account.get);
+    server.post('/:network/account', account.create);
+    server.get('/:network/transactions/:address', account.getTransactions);
+    server.post('/:network/transaction', transaction.create);
+    server.post('/:network/broadcast', transaction.broadcast);
 
-  server.post('/:network/transaction', transaction.create);
-
-  server.post('/:network/broadcast', transaction.broadcast);
-
-  server.listen(port, function() {
-    console.log('ark-rpc listening at %s', server.url);
-  });
-
+    server.listen(port, function() {
+      console.log('ark-rpc listening at %s', server.url);
+    });
 }
 
 program.

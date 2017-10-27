@@ -4,7 +4,7 @@
   "description": "RPC server acting as lite client for ARK blockchain",
   "main": "server.js",
   "scripts": {
-    "test": "mocha --timeout 20000",
+    "test": "mocha --timeout 20000 --exit",
     "start": "nodemon ./server.js"
   },
   "bin": {
@@ -28,10 +28,12 @@
   "dependencies": {
     "arkjs": "^0.2.1",
     "async": "^2.5.0",
+    "bigi": "^1.4.2",
     "bip38": "^2.0.1",
+    "bip39": "^2.4.0",
     "commander": "^2.11.0",
-    "forever": "^0.15.3",
-    "lowdb": "^1.0.0",
+    "leveldown": "^2.0.0",
+    "levelup": "^2.0.0",
     "request": "^2.83.0",
     "restify": "^6.2.0"
   },

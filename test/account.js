@@ -47,6 +47,39 @@ describe('Accounts', () => {
         });
     });
 
+    var bip38address = null;
+    var bip38backup = null;
+
+    it('it should create an account on mainnet using bip38 encryption', (done) => {
+        chai.request(server).
+          post('/mainnet/account').
+          send({
+              bip38: "master password",
+              userid: "userid"
+          }).
+          end((err, res) => {
+              res.should.have.status(200);
+              res.body.success.should.be.equal(true);
+              bip38address = res.body.account.address;
+              res.body.account.should.have.property('address');
+              res.body.account.should.have.property('backup');
+              bip38backup = res.body.account.backup.wif;
+          done();
+          });
+      });
+
+      it('it should find bip38 backup from userid', (done) => {
+        chai.request(server).
+          get('/mainnet/account/bip38/userid').
+          end((err, res) => {
+              res.should.have.status(200);
+              res.body.success.should.be.equal(true);
+              res.body.should.have.property('wif');
+              bip38backup = res.body.wif.should.equal(bip38backup);
+          done();
+          });
+      });
+
     it('it should create an account on devnet', (done) => {
         chai.request(server).
             post('/devnet/account').

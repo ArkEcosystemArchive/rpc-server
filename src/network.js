@@ -3,7 +3,7 @@ var async = require('async');
 var arkjs = require('arkjs');
 
 var network = null,
-server = null;
+  server = null;
 
 var networks = {
   devnet: {
@@ -45,8 +45,7 @@ function getFromNode(url, cb) {
   if (!url.startsWith("http")) {
     url = `http://${server}${url}`;
   }
-  request(
-    {
+  request({
       url,
       headers: {
         nethash,
@@ -66,12 +65,12 @@ function findEnabledPeers(cb) {
       cb(peers);
     }
     var respeers = JSON.parse(body).peers.
-      filter(function (peer) {
-        return peer.status == "OK";
-      }).
-      map(function (peer) {
-        return `${peer.ip}:${peer.port}`;
-      });
+    filter(function (peer) {
+      return peer.status == "OK";
+    }).
+    map(function (peer) {
+      return `${peer.ip}:${peer.port}`;
+    });
     async.each(respeers, function (peer, eachcb) {
       getFromNode(`http://${peer}/api/blocks/getHeight`, function (error, res, body2) {
         if (!error && body2 != "Forbidden") {
@@ -80,7 +79,7 @@ function findEnabledPeers(cb) {
         eachcb();
       });
     }, function (error) {
-      if(error) return cb(error);
+      if (error) return cb(error);
 
       return cb(peers);
     });
@@ -89,8 +88,7 @@ function findEnabledPeers(cb) {
 }
 
 function postTransaction(transaction, cb) {
-  request(
-    {
+  request({
       url: `http://${server}/peer/transactions`,
       headers: {
         nethash: network.nethash,
@@ -109,16 +107,16 @@ function broadcast(transaction, callback) {
   network.peers.slice(0, 10).forEach(function (peer) {
     // Console.log("sending to", peer);
     request({
-        url: `http://${peer}/peer/transactions`,
-        headers: {
-          nethash: network.nethash,
-          version: '1.0.0',
-          port: 1
-        },
-        method: 'POST',
-        json: true,
-        body: {transactions: [transaction]}
-      });
+      url: `http://${peer}/peer/transactions`,
+      headers: {
+        nethash: network.nethash,
+        version: '1.0.0',
+        port: 1
+      },
+      method: 'POST',
+      json: true,
+      body: {transactions: [transaction]}
+    });
   });
   callback();
 }
@@ -134,23 +132,22 @@ function connect2network(netw, callback) {
     }
     callback();
   });
-  getFromNode('/api/loader/autoconfigure', function(err, response, body) {
-    if(err) return;
+  getFromNode('/api/loader/autoconfigure', function (err, response, body) {
+    if (err) return;
     if (!body || !body.startsWith("{"))
-        connect2network(netw, callback);
+      connect2network(netw, callback);
     else {
-        netw.config = JSON.parse(body).network;
+      netw.config = JSON.parse(body).network;
     }
   });
 }
 
 function connect(req, res, next) {
   if (!server || !network || network.name != req.params.network) {
-    if(networks[req.params.network]){
+    if (networks[req.params.network]) {
       arkjs.crypto.setNetworkVersion(networks[req.params.network].version);
       connect2network(networks[req.params.network], next);
-    }
-    else{
+    } else {
       res.send({
         success: false,
         error: `Could not find network ${req.params.network}`
