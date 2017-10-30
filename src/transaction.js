@@ -49,7 +49,8 @@ function createBip38(req, res, next) {
 }
 
 function create(req, res, next) {
-  var transaction = arkjs.transaction.createTransaction(req.params.recipientId, req.params.amount, null, req.params.passphrase);
+  var amount = parseInt(req.params.amount);
+  var transaction = arkjs.transaction.createTransaction(req.params.recipientId, amount, null, req.params.passphrase);
   leveldb.
     setObject(transaction.id, transaction).
     then(function(){
