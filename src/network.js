@@ -53,7 +53,7 @@ function getFromNode(url, cb) {
         version: '2.0.0',
         port: 1
       },
-      timeout: 2000
+      timeout: 5000
     },
     function(error, response, body){
       if(error){

@@ -18,6 +18,7 @@ function startServer(port){
   server = restify.createServer().
     use(restrictToLocalhost).
     use(restify.plugins.bodyParser({mapParams: true})).
+    use(restify.plugins.queryParser({mapParams: true})).
     use(network.connect);
 
     server.get('/:network/account/bip38/:userid', account.getBip38Account);
