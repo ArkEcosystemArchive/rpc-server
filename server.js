@@ -9,7 +9,7 @@ var program = require('commander');
 var server = null;
 
 function restrictToLocalhost(req, res, next){
-  if(req.connection.remoteAddress == "::1" || req.connection.remoteAddress == "127.0.0.1" || req.connection.remoteAddress == "::ffff:127.0.0.1")
+  if(req.getRoute().path == '/:network/broadcast' || req.connection.remoteAddress == "::1" || req.connection.remoteAddress == "127.0.0.1" || req.connection.remoteAddress == "::ffff:127.0.0.1")
     next();
   else res.end();
 }
