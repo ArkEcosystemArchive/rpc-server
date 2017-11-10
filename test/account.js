@@ -3,6 +3,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
 const arkjs = require('arkjs');
+const bip39 = require('bip39');
 
 chai.should();
 chai.use(chaiHttp);
@@ -31,6 +32,21 @@ describe('Accounts', () => {
         done();
       });
     });
+
+    // it('STRESSTEST: it should GET 50000 accounts on devnet', (done) => {
+    //   for(var i=0; i<50000; i++){
+    //     var address = arkjs.crypto.getKeys(bip39.generateMnemonic()).getAddress();
+    //     chai.request(server).
+    //     get('/devnet/account/'+address).
+    //     end((err, res) => {
+    //       res.should.have.status(200);
+    //       res.body.success.should.be.equal(true);
+    //       res.body.account.address.should.be.equal(address);
+    //       done();
+    //     });
+    //   }
+      
+    // });
   });
 
   describe('/POST account', () => {
@@ -93,6 +109,7 @@ describe('Accounts', () => {
         recipientId: "AUDud8tvyVZa67p3QY7XPRUTjRGnWQQ9Xv"
       }).
       end((err, res) => {
+        process.stdout.write(".");
         res.should.have.status(200);
         res.body.success.should.be.equal(true);
         res.body.transaction.recipientId.should.equal("AUDud8tvyVZa67p3QY7XPRUTjRGnWQQ9Xv");

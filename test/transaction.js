@@ -98,6 +98,20 @@ describe('Transactions', () => {
         });
     });
 
+    it('it should broadcast tx on devnet the old way', (done) => {
+      chai.request(server).
+        post('/devnet/broadcast').
+        send({
+          transactions: [devnettx]
+        }).
+        end((err, res) => {
+          res.should.have.status(200);
+          res.body.success.should.be.equal(true);
+          res.body.transactionIds[0].should.be.equal(devnettx.id);
+          done();
+        });
+    });
+
 
   });
 

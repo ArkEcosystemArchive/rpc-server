@@ -75,7 +75,21 @@ function getAll(req, res, next) {
 }
 
 function broadcast(req, res, next) {
-  leveldb.getObject(req.params.id).
+  if(req.params.transactions){ //old way
+    Promise.all(
+      req.params.transactions.map((transaction) => 
+        network.broadcast(transaction, function () {
+          return Promise.resolve(transaction);
+        })
+      )
+    ).then((transactions) => {
+      res.send({
+        success: true,
+        transactionIds: req.params.transactions.map((tx) => tx.id)
+      });
+      next();
+    });
+  } else leveldb.getObject(req.params.id).
     then(function(transaction){
       transaction = transaction || req.params;
       if (!arkjs.crypto.verify(transaction)) {
