@@ -7,6 +7,6 @@ RUN cd /src/ark-rpc \
     && npm install
 
 WORKDIR /src/ark-rpc
-ENTRYPOINT ["forever","./server.js","--allow-remote"]
+ENTRYPOINT ["forever","./server.js"]
 
 EXPOSE 8081
