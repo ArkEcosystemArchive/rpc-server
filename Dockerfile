@@ -9,4 +9,4 @@ RUN cd /src/ark-rpc \
 WORKDIR /src/ark-rpc
 ENTRYPOINT ["forever","./server.js"]
 
-EXPOSE 8081
+EXPOSE 8080
