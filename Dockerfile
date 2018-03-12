@@ -1,4 +1,6 @@
-FROM zenika/alpine-node:latest
+FROM node:alpine
+
+RUN apk add --no-cache make gcc g++ python git
 
 COPY . /src/ark-rpc
 
