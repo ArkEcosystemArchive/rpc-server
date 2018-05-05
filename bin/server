@@ -21,11 +21,11 @@ app
   ])
   .action(async(options) => startServer(options))
 
-// app
-//   .command('*')
-//   .action(env => {
-//     app.help()
-//     process.exit(0)
-//   })
+app
+  .command('*')
+  .action(env => {
+    app.help()
+    process.exit(0)
+  })
 
 app.parse(process.argv)
