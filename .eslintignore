@@ -1,7 +1,6 @@
 /build/**
 /coverage/**
 /docs/**
-/tests/bench/**
+/__tests__/**
 /tmp/**
-test.js
 !.eslintrc.js

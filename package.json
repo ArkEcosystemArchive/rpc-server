@@ -21,15 +21,16 @@
   "dependencies": {
     "arkjs": "github:arkecosystem/ark-js#master",
     "async": "^2.6.0",
+    "axios": "^0.18.0",
     "bigi": "^1.4.2",
     "bip38": "^2.0.2",
     "bip39": "^2.5.0",
+    "boom": "^7.2.0",
     "commander": "^2.15.1",
     "hapi": "^17.4.0",
     "leveldown": "^3.0.1",
     "levelup": "^2.0.2",
-    "pm2": "^2.10.3",
-    "request": "^2.85.0"
+    "pm2": "^2.10.3"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
