@@ -14,6 +14,7 @@
   },
   "scripts": {
     "start": "./bin/server start",
+    "start:remote": "./bin/server start --allow-remote",
     "test": "jest --forceExit",
     "test:watch": "jest --forceExit --watch",
     "lint": "eslint ./ --fix"

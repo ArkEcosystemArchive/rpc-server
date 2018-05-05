@@ -9,7 +9,7 @@ app
   .command('start')
   .description('start the RPC server')
   .option('-p, --port <port>', 'The port to start server', 8080)
-  .option('--allow-remote', 'Allow all connections from sources other than localhost')
+  .option('--allow-remote', 'Allow all connections from sources other than localhost', false)
   .option('--allow <address>', 'Add addresses to the whitelist. Allows usage of * for placeholder in addresses, eg. 192.168.178.* or 10.0.*.*.', (val, memo) => {
     memo.push(val)
 
