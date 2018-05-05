@@ -1,6 +1,6 @@
 ![ARK-RPC](https://cdn-images-1.medium.com/max/2000/1*QFNTgOOP_9NIaNwIrBnp_w.png)
 
-### RPC server implementation to easily connect to ARK blockchain
+### RPC server acting as lite client for the ARK blockchain
 
 # Security Warning
 All calls should be made from the server where RPC is running at ( i.e., `localhost` or `127.0.0.1` ). The RPC server should never be publicly accessible. If you wish to access ark-rpc from a remote address, you can whitelist the address with `--allow <address>`. Addresses allow you to use wildcards, eg. `192.168.1.*` or `10.0.*.*`.
@@ -41,3 +41,17 @@ If you want to create several accounts for one user, you need to use a different
 - Broadcast transaction: `POST /:network/broadcast` params: `id` of the transaction
 
 Note that if the transaction has been created via the RPC it has been stored internally, as such only the transaction `id` is needed to broadcast/rebroadcast it. Otherwise if created outside of this RPC server, pass the whole transaction body as the POST payload.
+
+## Security
+
+If you discover a security vulnerability within this package, please send an e-mail to security@ark.io. All security vulnerabilities will be promptly addressed.
+
+## Credits
+
+- [François-Xavier Thoorens](https://github.com/fix)
+- [Brian Faust](https://github.com/faustbrian)
+- [All Contributors](./contributors)
+
+## License
+
+[MIT](LICENSE) © [ArkEcosystem](https://ark.io)
