@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
 const app = require('commander')
+const startServer = require('../lib')
 
 app.version(require('../package.json').version)
 
 app
   .command('start')
-  .description('start a relay and forging node')
-  .option('-p, --port <port>', 'The port to start server', 8080).
-  .option('--allow-remote', 'Allow all connections from sources other than localhost').
+  .description('start the RPC server')
+  .option('-p, --port <port>', 'The port to start server', 8080)
+  .option('--allow-remote', 'Allow all connections from sources other than localhost')
   .option('--allow <address>', 'Add addresses to the whitelist. Allows usage of * for placeholder in addresses, eg. 192.168.178.* or 10.0.*.*.', (val, memo) => {
     memo.push(val)
 
@@ -17,14 +18,14 @@ app
     '::1',
     '127.0.0.1',
     '::ffff:127.0.0.1'
-  ]).
-  .action(async(options) => startServer(options.port))
+  ])
+  .action(async(options) => startServer(options))
 
-app
-  .command('*')
-  .action(env => {
-    app.help()
-    process.exit(0)
-  })
+// app
+//   .command('*')
+//   .action(env => {
+//     app.help()
+//     process.exit(0)
+//   })
 
 app.parse(process.argv)
