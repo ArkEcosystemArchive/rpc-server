@@ -5,7 +5,7 @@ module.exports = {
   bail: true,
   verbose: false,
   testMatch: [
-    '**/__tests__/**/*.specc.js'
+    '**/__tests__/**/*.spec.js'
   ],
   moduleFileExtensions: [
     'js',
