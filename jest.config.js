@@ -3,9 +3,9 @@
 module.exports = {
   testEnvironment: 'node',
   bail: true,
-  verbose: true,
+  verbose: false,
   testMatch: [
-    '**/__tests__/**/*.spec.js'
+    '**/__tests__/**/*.specc.js'
   ],
   moduleFileExtensions: [
     'js',
@@ -18,6 +18,6 @@ module.exports = {
     '!**/node_modules/**'
   ],
   watchman: false,
-  // globalSetup: './__tests__/__support__/setup.js',
+  globalSetup: './__tests__/__support__/setup.js',
   setupTestFrameworkScriptFile: 'jest-extended'
 }
