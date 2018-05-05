@@ -1,8 +1,7 @@
 const axios = require('axios')
 const arkjs = require('arkjs')
-const bip39 = require('bip39')
 
-jest.setTimeout(30000)
+jest.setTimeout(60000)
 
 describe('Accounts', () => {
   describe('/GET account', () => {
@@ -12,14 +11,6 @@ describe('Accounts', () => {
       await expect(response.status).toBe(200)
       await expect(response.data.success).toBe(true)
       await expect(response.data.account.address).toBe('AUDud8tvyVZa67p3QY7XPRUTjRGnWQQ9Xv')
-    })
-
-    it('it should GET account with a given address on devnet', async () => {
-      const response = await axios.get('http://localhost:8080/devnet/accounts/DGihocTkwDygiFvmg6aG8jThYTic47GzU9')
-
-      await expect(response.status).toBe(200)
-      await expect(response.data.success).toBe(true)
-      await expect(response.data.account.address).toBe('DGihocTkwDygiFvmg6aG8jThYTic47GzU9')
     })
   })
 
@@ -32,17 +23,6 @@ describe('Accounts', () => {
       await expect(response.status).toBe(200)
       await expect(response.data.success).toBe(true)
       await expect(response.data.account.address).toBe('AUdAwTiByRp5BFyGz9uxXuNYa1KGHT4rmt')
-      await expect(response.data.account.publicKey).toBe('03675c61dcc23eab75f9948c6510b54d34fced4a73d3c9f2132c76a29750e7a614')
-    })
-
-    it('it should create an account on devnet', async () => {
-      const response = await axios.post('http://localhost:8080/devnet/accounts', {
-        passphrase: 'this is a test'
-      })
-
-      await expect(response.status).toBe(200)
-      await expect(response.data.success).toBe(true)
-      await expect(response.data.account.address).toBe('DHzPqDoCwh4CuHwtA6FBvnH3yY7sJmZ54P')
       await expect(response.data.account.publicKey).toBe('03675c61dcc23eab75f9948c6510b54d34fced4a73d3c9f2132c76a29750e7a614')
     })
 
