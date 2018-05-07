@@ -15,8 +15,8 @@
   "scripts": {
     "start": "./bin/server start",
     "start:remote": "./bin/server start --allow-remote",
-    "test": "jest --forceExit",
-    "test:watch": "jest --forceExit --watch",
+    "test": "jest --runInBand --forceExit",
+    "test:watch": "jest --runInBand --forceExit --watch",
     "lint": "eslint ./ --fix"
   },
   "dependencies": {
