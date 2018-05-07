@@ -9,7 +9,7 @@ If you do want to allow access from all remotes, start ark-rpc with the `--allow
 
 # How To Use It
 - install Node.JS ( https://nodejs.org/en/download/package-manager/)
-- install forever `npm install -g forever`
+- install pm2 `npm install -g pm2`
 - install ark-rpc: `npm install arkecosystem/ark-rpc#master`
 - start RPC server: `ark-rpc --port 8000` (default port is 8080)
 
