@@ -67,7 +67,7 @@ function getFromNode(url, cb) {
 function findEnabledPeers(cb) {
   var peers = [];
   getFromNode('/peer/list', function (err, response, body) {
-    if (err || body == "undefined") {
+    if (err || body == undefined) {
       cb(peers);
     }
     var respeers = JSON.parse(body).peers.
