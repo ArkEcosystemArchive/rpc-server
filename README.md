@@ -41,3 +41,7 @@ If you want to create several accounts for one user, you need to use a different
 - Broadcast transaction: `POST /:network/broadcast` params: `id` of the transaction
 
 Note that if the transaction has been created via the RPC it has been stored internally, as such only the transaction `id` is needed to broadcast/rebroadcast it. Otherwise if created outside of this RPC server, pass the whole transaction body as the POST payload.
+
+## Security
+
+If you discover a security vulnerability within this project, please send an e-mail to security@ark.io. All security vulnerabilities will be promptly addressed.
