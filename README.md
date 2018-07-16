@@ -45,3 +45,7 @@ Note that if the transaction has been created via the RPC it has been stored int
 ## Security
 
 If you discover a security vulnerability within this project, please send an e-mail to security@ark.io. All security vulnerabilities will be promptly addressed.
+
+## License
+
+The MIT License (MIT)
