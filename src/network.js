@@ -42,8 +42,14 @@ var networks = {
 
 function getFromNode(url, cb) {
   var nethash = network ? network.nethash : "";
+
+  let peerServer = server
   if (!url.startsWith("http")) {
-    url = `http://${server}${url}`;
+    if (url.includes("/api/")) {
+      const [_, port] = peerServer.split(':')
+      peerServer = peerServer.replace(port, 4003)
+    }
+    url = `http://${peerServer}${url}`;
   }
   request(
     {
