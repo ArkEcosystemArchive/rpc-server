@@ -1,3 +1,4 @@
+var nurl = require('url');
 var request = require('request');
 var async = require('async');
 var arkjs = require('arkjs');
@@ -45,12 +46,13 @@ function getFromNode(url, cb) {
 
   let peerServer = server
   if (!url.startsWith("http")) {
-    if (url.includes("/api/")) {
-      const [_, port] = peerServer.split(':')
-      peerServer = peerServer.replace(port, 4003)
-    }
     url = `http://${peerServer}${url}`;
   }
+
+  if (url.includes("/api/")) {
+    url = url.replace(nurl.parse(url).port, 4003)
+  }
+
   request(
     {
       url,
