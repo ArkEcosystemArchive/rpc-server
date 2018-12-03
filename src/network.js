@@ -1,3 +1,4 @@
+var nurl = require('url');
 var request = require('request');
 var async = require('async');
 var arkjs = require('arkjs');
@@ -42,9 +43,15 @@ var networks = {
 
 function getFromNode(url, cb) {
   var nethash = network ? network.nethash : "";
+
   if (!url.startsWith("http")) {
     url = `http://${server}${url}`;
   }
+
+  if (url.includes("/api/")) {
+    url = url.replace(nurl.parse(url).port, 4003)
+  }
+
   request(
     {
       url,
