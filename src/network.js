@@ -114,8 +114,8 @@ function getFromNode(url, cb) {
       },
       timeout: 5000
     },
-    function(error, response, body){
-      if(error){
+    function (error, response, body) {
+      if (error) {
         server = network.peers[Math.floor(Math.random() * 1000) % network.peers.length];
       }
       cb(error, response, body);
@@ -130,12 +130,12 @@ function findEnabledPeers(cb) {
       cb(peers);
     }
     var respeers = JSON.parse(body).peers.
-    filter(function (peer) {
-      return peer.status == "OK";
-    }).
-    map(function (peer) {
-      return `${peer.ip}:${peer.port}`;
-    });
+      filter(function (peer) {
+        return peer.status == "OK";
+      }).
+      map(function (peer) {
+        return `${peer.ip}:${peer.port}`;
+      });
     async.each(respeers, function (peer, eachcb) {
       getFromNode(`http://${peer}/api/blocks/getHeight`, function (error, res, body2) {
         if (!error && body2 != "Forbidden") {
@@ -158,12 +158,12 @@ function postTransaction(transaction, cb) {
       url: `http://${server}/peer/transactions`,
       headers: {
         nethash: network.nethash,
-        version: '1.0.0',
+        version: '2.3.0',
         port: 1
       },
       method: 'POST',
       json: true,
-      body: {transactions: [transaction]}
+      body: { transactions: [transaction] }
     },
     cb
   );
@@ -176,12 +176,12 @@ function broadcast(transaction, callback) {
       url: `http://${peer}/peer/transactions`,
       headers: {
         nethash: network.nethash,
-        version: '1.0.0',
+        version: '2.3.0',
         port: 1
       },
       method: 'POST',
       json: true,
-      body: {transactions: [transaction]}
+      body: { transactions: [transaction] }
     });
   });
   callback();
