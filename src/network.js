@@ -93,6 +93,10 @@ var networks = {
   }
 };
 
+function getPublicHost(host) {
+  return host.replace(4001, 4003).replace(4002, 4003)
+}
+
 function getFromNode(url, cb) {
   var nethash = network ? network.nethash : "";
 
@@ -104,8 +108,7 @@ function getFromNode(url, cb) {
     url = url.replace(nurl.parse(url).port, 4003)
   }
 
-  request(
-    {
+  request({
       url,
       headers: {
         nethash,
@@ -130,12 +133,12 @@ function findEnabledPeers(cb) {
       cb(peers);
     }
     var respeers = JSON.parse(body).peers.
-      filter(function (peer) {
-        return peer.status == "OK";
-      }).
-      map(function (peer) {
-        return `${peer.ip}:${peer.port}`;
-      });
+    filter(function (peer) {
+      return peer.status == "OK";
+    }).
+    map(function (peer) {
+      return `${peer.ip}:${peer.port}`;
+    });
     async.each(respeers, function (peer, eachcb) {
       getFromNode(`http://${peer}/api/blocks/getHeight`, function (error, res, body2) {
         if (!error && body2 != "Forbidden") {
@@ -153,17 +156,13 @@ function findEnabledPeers(cb) {
 }
 
 function postTransaction(transaction, cb) {
-  request(
-    {
-      url: `http://${server}/peer/transactions`,
-      headers: {
-        nethash: network.nethash,
-        version: '2.3.0',
-        port: 1
-      },
+  request({
+      url: `http://${getPublicHost(server)}/api/v2/transactions`,
       method: 'POST',
       json: true,
-      body: { transactions: [transaction] }
+      body: {
+        transactions: [transaction]
+      }
     },
     cb
   );
@@ -171,17 +170,13 @@ function postTransaction(transaction, cb) {
 
 function broadcast(transaction, callback) {
   network.peers.slice(0, 10).forEach(function (peer) {
-    // Console.log("sending to", peer);
     request({
-      url: `http://${peer}/peer/transactions`,
-      headers: {
-        nethash: network.nethash,
-        version: '2.3.0',
-        port: 1
-      },
+      url: `http://${getPublicHost(server)}/api/v2/transactions`,
       method: 'POST',
       json: true,
-      body: { transactions: [transaction] }
+      body: {
+        transactions: [transaction]
+      }
     });
   });
   callback();
